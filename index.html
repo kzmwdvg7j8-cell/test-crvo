@@ -24,31 +24,38 @@ textarea,#q{width:100%;border-radius:12px;border:1px solid var(--bd);background:
 input[type=range]{width:100%;accent-color:var(--ac);margin:6px 0}
 nav{position:fixed;left:0;right:0;bottom:0;display:flex;gap:6px;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--bd);z-index:9}
 nav button{flex:1;border:0;background:none;color:var(--mut);font:inherit;font-size:12px;padding:6px;border-radius:12px}nav button.on{background:var(--bg);color:var(--ac);font-weight:700}
-</style></head><body>
-<header><div class="t">Ton ressenti</div><div id="bm">—</div><div id="bw"></div></header>
+.m{margin:6px 0;padding:8px 10px;border-radius:12px;background:var(--bg)}.m.u{margin-left:24px;color:var(--ac)}.stk{position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px);z-index:8}</style></head><body>
+<header><button id="sv" class="btn" style="position:absolute;right:12px;top:calc(env(safe-area-inset-top,0px) + 10px);background:rgba(255,255,255,.22);color:#fff;border-color:rgba(255,255,255,.4);margin:0">💾 Enregistrer</button><div class="t">Ton ressenti</div><div id="bm">—</div><div id="bw"></div></header>
 <main>
 <section id="v1">
-<div class="card"><h2>1 · Tes sensations</h2><div class="mut">Touche une sensation pour régler son intensité (40, 70 puis 100 %).</div><div id="sens" style="margin-top:8px"></div>
-<textarea id="txt" rows="3" placeholder="Décris-le avec tes mots (optionnel, analysé par l’IA)…"></textarea>
-<button class="btn p" id="go">Analyser</button><button class="btn" id="rz">Tout effacer</button><div class="mut" id="msg"></div></div>
-<div class="card"><h2>2 · Ce que tu ressens</h2><div id="mix"></div><div id="va"></div>
+<div class="card"><h2>1 · La situation</h2><textarea id="txt" rows="3" placeholder="Raconte ce qui s’est passé (où, avec qui, quand)…"></textarea><button class="btn p" id="go">Continuer</button><button class="btn" id="rz">Tout effacer</button><div class="mut" id="msg"></div></div>
+<div class="card hide" id="cc"><h2>2 · Ce que tu as ressenti</h2><div class="mut">Touche ce qui correspond (touche encore pour l’intensité : 40, 70 puis 100 %), puis réponds aux questions.</div><div id="sens" style="margin:8px 0"></div><div id="chat"></div><div id="qa"></div><textarea id="ans" rows="2" placeholder="Ta réponse…"></textarea><button class="btn p" id="send">Répondre</button><button class="btn" id="fin">Terminer</button></div>
+<div class="card"><h2>3 · Ton ressenti</h2><div id="mix"></div><div id="va"></div>
 <button class="btn" id="nm">Affiner le mot (IA)</button><div class="mut" id="nmo"></div>
 <h3>Symptômes corporels</h3><div class="mut">Distincts des émotions : ce sont des effets physiques.</div><div id="sy"></div></div>
-<div class="card mut">Modèle pédagogique. Le lien sensations → récepteurs → émotions est une heuristique inspirée de la neurophysiologie, pas une mesure, et ne remplace pas un avis médical. Repères publiés : D2 (Kapur 2000), SERT (Meyer 2004), atlas de densités (Hansen 2022, Nat Neurosci).</div>
+<div class="card mut">Modèle pédagogique. Le lien sensations → récepteurs → émotions est une heuristique inspirée de la neurophysiologie, pas une mesure, et ne remplace pas un avis médical. Le mélange d’émotions s’appuie sur le modèle bivarié de l’affect (Cacioppo &amp; Berntson 1994) et le circumplex (Russell 1980) ; la position des mots est approximative. Repères publiés : D2 (Kapur 2000), SERT (Meyer 2004), atlas de densités (Hansen 2022, Nat Neurosci).</div>
 </section>
 <section id="v2" class="hide">
+<div class="card stk"><h2>Lecture IA</h2><div id="lec" class="mut">Change un récepteur : en lâchant le curseur, l’IA décrit le ressenti à ce palier.</div></div>
+<div class="card"><button class="btn p" id="rm">🔬 Mode réaliste : désactivé</button><div class="mut">Ne garde que les 14 récepteurs cartographiés en PET chez l’humain (atlas Hansen 2022, marqués ★) et coupe les couplages dont l’intensité est estimée. Hors de ce mode, les autres restent actifs avec des valeurs plausibles mais moins quantifiées.</div></div>
 <div class="card"><h2>Récepteurs inclus</h2><button class="btn" data-top="5">Top 5</button><button class="btn" data-top="10">Top 10</button><button class="btn" data-top="20">Top 20</button><button class="btn" data-top="99">Tous</button><div id="chips" style="margin-top:6px"></div></div>
 <input id="q" placeholder="Filtrer les récepteurs…"><div class="card" id="list"></div>
 <div class="mut">Touche ▸ pour la description. Le curseur = intensité à laquelle tu le ressens (50 % = repos).</div>
 </section>
 <section id="map" class="hide">
 <div class="card"><div id="cv" style="height:360px;touch-action:none"></div>
-<button class="btn" id="auto">⟳ Rotation auto</button><button class="btn" id="rst">Vue initiale</button><button class="btn p" id="play">▶ Simuler dans le temps</button><span class="mut" id="ph"></span>
+<button class="btn" id="auto">⟳ Rotation auto</button><button class="btn" id="rst">Vue initiale</button><label class="btn">📂 Importer un modèle .obj<input type="file" id="obj" accept=".obj" hidden></label><button class="btn p" id="play">▶ Simuler dans le temps</button><span class="mut" id="ph"></span>
 <div class="mut">Mise à jour en direct. Rouge = hyperactif, bleu = hypoactif, traits = liaisons et interactions.</div></div>
 <div class="card" id="regd"><span class="mut">Touche une région du cerveau.</span></div>
 </section>
+<section id="jr" class="hide">
+<div class="card"><h2>Enregistrer ce moment</h2><div class="mut">Sauvegarde l’état actuel (heure, émotion, récepteurs) sur cet appareil. Le bouton 💾 en haut le fait à tout moment.</div><textarea id="note" rows="2" placeholder="Note (optionnel)…"></textarea><button class="btn p" id="sv2">💾 Enregistrer maintenant</button><div class="mut" id="jmsg"></div></div>
+<div class="card"><h2>Importer un code</h2><div class="mut">Colle un code (le tien ou celui d’une entrée). Notations standards ou abrégées acceptées. A→B = avant→après : c’est la valeur « après » qui est appliquée.</div><textarea id="imp" rows="3" placeholder="OXTR=96/5HT1A=90/MOR=85/CB1=40→35"></textarea><button class="btn p" id="ap">Appliquer au simulateur</button></div>
+<div class="card"><h2>Journal</h2><div id="jl"></div></div>
+<div class="card"><h2>Exporter</h2><button class="btn" id="ex">Exporter tout le journal</button><button class="btn" id="jc">Tout effacer</button><textarea id="exp" rows="4" placeholder="Le code de ton journal apparaît ici…"></textarea></div>
+</section>
 </main>
-<nav><button class="on" data-v="v1">✍️<br>Ressenti</button><button data-v="v2">🧪<br>Récepteurs</button><button data-v="map">🧠<br>Cerveau</button></nav>
+<nav><button class="on" data-v="v1">✍️<br>Ressenti</button><button data-v="jr">📖<br>Journal</button><button data-v="v2">🧪<br>Récepteurs</button><button data-v="map">🧠<br>Cerveau</button></nav>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 const $=s=>document.querySelector(s);
@@ -119,19 +126,29 @@ const P3={pfc:[.5,.35,1],ofc:[.4,-.25,1.05],acc:[.2,.3,.6],ins:[.85,0,.3],thal:[
 function upd3(){if(!T)return;T.lg.clear();
 T.ms.forEach(m=>{const id=m.userData.id,x=rv(id),a=Math.abs(x),c=new THREE.Color(a<.1?0x888888:x>0?0xe8672b:0x2b7fe8);m.material.color.copy(c);m.material.emissive.copy(c).multiplyScalar(.4);m.scale.setScalar(.8+1.6*a+(sel==id?.6:0))});
 L.forEach(([a,b,k])=>{const x=d(k);if(Math.abs(x)<.1||!on.has(k))return;[1,-1].forEach(s=>{const p=P3[a],q=P3[b];T.lg.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(p[0]*s,p[1],p[2]),new THREE.Vector3(q[0]*s,q[1],q[2])]),new THREE.LineBasicMaterial({color:x>0?0xe8672b:0x2b7fe8,transparent:true,opacity:.3+.7*Math.abs(x)})))})});
-IX.forEach(([a,b,g])=>{if(!on.has(a)||!on.has(b))return;const x=g*d(a),pa=R.find(r=>r.k==a).r[0],pb=R.find(r=>r.k==b).r[0];if(pa==pb||Math.abs(x)<.1)return;[1,-1].forEach(s=>{const p=P3[pa],q=P3[pb];T.lg.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(p[0]*s,p[1],p[2]),new THREE.Vector3(q[0]*s,q[1],q[2])]),new THREE.LineBasicMaterial({color:x>0?0xe8672b:0x2b7fe8,transparent:true,opacity:.3+.7*Math.abs(x)})))})})}
+IX.forEach(([a,b,g])=>{if(RM||!on.has(a)||!on.has(b))return;const x=g*d(a),pa=R.find(r=>r.k==a).r[0],pb=R.find(r=>r.k==b).r[0];if(pa==pb||Math.abs(x)<.1)return;[1,-1].forEach(s=>{const p=P3[pa],q=P3[pb];T.lg.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(p[0]*s,p[1],p[2]),new THREE.Vector3(q[0]*s,q[1],q[2])]),new THREE.LineBasicMaterial({color:x>0?0xe8672b:0x2b7fe8,transparent:true,opacity:.3+.7*Math.abs(x)})))})})}
 function init3(){if(T)return;const el=$('#cv');if(!window.THREE){el.textContent='3D indisponible (bibliothèque non chargée).';return}
 const w=el.clientWidth,H=360,sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,w/H,.1,50);cam.position.set(0,0,5.2);
 const rd=new THREE.WebGLRenderer({antialias:true,alpha:true});rd.setSize(w,H);rd.setPixelRatio(Math.min(2,devicePixelRatio));el.appendChild(rd.domElement);
 sc.add(new THREE.AmbientLight(0xffffff,.8));const dl=new THREE.DirectionalLight(0xffffff,.7);dl.position.set(3,4,5);sc.add(dl);
 const g=new THREE.Group();g.rotation.y=-.6;g.rotation.x=.15;sc.add(g);
-const mat=new THREE.MeshPhongMaterial({color:0xe3a6a1,transparent:true,opacity:.26,depthWrite:false,side:THREE.DoubleSide}),wm=new THREE.LineBasicMaterial({color:0xc97f7a,transparent:true,opacity:.14});
-const blob=(rx,ry,rz,x,y,z,f)=>{const geo=new THREE.SphereGeometry(1,44,32),p=geo.attributes.position;for(let i=0;i<p.count;i++){const a=p.getX(i),b=p.getY(i),c=p.getZ(i),k=1+f*Math.sin(9*a+4*b)*Math.sin(8*c+3*a);p.setXYZ(i,a*k*rx,b*k*ry,c*k*rz)}geo.computeVertexNormals();const m=new THREE.Mesh(geo,mat),wf=new THREE.LineSegments(new THREE.WireframeGeometry(geo),wm);m.position.set(x,y,z);wf.position.set(x,y,z);g.add(m,wf)};
-blob(.55,.8,1.3,.52,0,0,.06);blob(.55,.8,1.3,-.52,0,0,.06);blob(.75,.3,.4,0,-.62,-1,.09);
-const bs=new THREE.Mesh(new THREE.CylinderGeometry(.14,.1,.9,16),mat);bs.position.set(0,-.85,-.5);bs.rotation.x=.3;g.add(bs);
+const BG=new THREE.Group();g.add(BG);
+const hs=(x,y,z)=>Math.sin(x*1.7+Math.sin(y*2.3+z*1.1))*Math.cos(y*1.9+Math.sin(z*2.1+x*.7))+.7*Math.sin(z*2.3+Math.cos(x*1.3+y*1.7));
+const fold=(x,y,z)=>{let f=0,a=1,fr=2.6;for(let o=0;o<4;o++){f+=a*(1-.9*Math.abs(hs(x*fr,y*fr,z*fr)));a*=.5;fr*=2.1}return f};
+const bm=new THREE.MeshPhongMaterial({vertexColors:true,transparent:true,opacity:.4,depthWrite:false,side:THREE.DoubleSide,shininess:25});
+const lobe=(sd,cx)=>{const geo=new THREE.SphereGeometry(1,110,80),p=geo.attributes.position,cl=new Float32Array(p.count*3);
+for(let i=0;i<p.count;i++){let a=p.getX(i),b=p.getY(i),c=p.getZ(i);const med=Math.max(0,-a*sd),lat=Math.max(0,a*sd);
+a*=1-.7*med;a*=1-.15*Math.max(0,c);if(b<0){b*=.72;b*=1+.35*Math.max(0,Math.sin((c+.45)*2.3))*lat}
+const f=fold(a*2,b*2,c*2);let k=1+.07*(f-.9);if(lat>.5)k-=.09*Math.exp(-Math.pow((b+.1)/.09,2));
+p.setXYZ(i,a*.55*k,b*.8*k,c*1.3*k);const sh=Math.max(.45,Math.min(1,.62+.42*(f-.9)));cl[i*3]=.93*sh;cl[i*3+1]=.66*sh;cl[i*3+2]=.62*sh}
+geo.setAttribute('color',new THREE.BufferAttribute(cl,3));geo.computeVertexNormals();const m=new THREE.Mesh(geo,bm);m.position.set(cx,0,0);BG.add(m)};
+lobe(1,.52);lobe(-1,-.52);
+{const geo=new THREE.SphereGeometry(1,70,50),p=geo.attributes.position,cl=new Float32Array(p.count*3);for(let i=0;i<p.count;i++){const a=p.getX(i),b=p.getY(i),c=p.getZ(i),w=Math.sin(b*34+Math.sin(a*3)),k=1+.035*w;p.setXYZ(i,a*.75*k,b*.3*k,c*.4*k);const sh=.8+.2*w;cl[i*3]=.85*sh;cl[i*3+1]=.6*sh;cl[i*3+2]=.58*sh}geo.setAttribute('color',new THREE.BufferAttribute(cl,3));geo.computeVertexNormals();const m=new THREE.Mesh(geo,bm);m.position.set(0,-.62,-1);BG.add(m)}
+const bs=new THREE.Mesh(new THREE.CylinderGeometry(.16,.09,.95,20),new THREE.MeshPhongMaterial({color:0xd99a92,transparent:true,opacity:.45,depthWrite:false}));bs.position.set(0,-.85,-.5);bs.rotation.x=.3;BG.add(bs);
+const V3=(x,y,z)=>new THREE.Vector3(x,y,z);BG.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([V3(0,.2,.85),V3(0,.4,.4),V3(0,.42,-.1),V3(0,.3,-.6),V3(0,.1,-.85)]),24,.07,8),new THREE.MeshPhongMaterial({color:0xf2e4de,transparent:true,opacity:.7,depthWrite:false})));
 const sp=t=>{const c=document.createElement('canvas');c.width=128;c.height=40;const x=c.getContext('2d');x.font='bold 26px sans-serif';x.textAlign='center';x.lineWidth=5;x.strokeStyle='#000';x.fillStyle='#fff';x.strokeText(t,64,28);x.fillText(t,64,28);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));s.scale.set(.5,.16,1);return s};
 const ms=[];for(const id in P3){const p=P3[id];[1,-1].forEach(s=>{if(s<0&&!p[0])return;const m=new THREE.Mesh(new THREE.SphereGeometry(.11,16,12),new THREE.MeshPhongMaterial({color:0x888888}));m.position.set(p[0]*s,p[1],p[2]);m.userData.id=id;g.add(m);ms.push(m);if(s>0){const l=sp(id.toUpperCase());l.position.set(p[0],p[1]+.2,p[2]);g.add(l)}})}
-T={lg:new THREE.Group(),ms};g.add(T.lg);
+T={lg:new THREE.Group(),ms,BG};g.add(T.lg);
 const cv=rd.domElement,pt=new Map(),ray=new THREE.Raycaster(),mv=new THREE.Vector2();let moved=0,auto=false;cv.style.touchAction='none';
 cv.onpointerdown=e=>{cv.setPointerCapture(e.pointerId);pt.set(e.pointerId,[e.clientX,e.clientY]);moved=0;auto=false};
 cv.onpointermove=e=>{const o=pt.get(e.pointerId);if(!o)return;const dx=e.clientX-o[0],dy=e.clientY-o[1],dist=()=>{const q=[...pt.values()];return Math.hypot(q[0][0]-q[1][0],q[0][1]-q[1][1])};
@@ -148,10 +165,11 @@ upd3()}
 let EF={},MUL=1,sel=null,T=null,sample=null;const v={};R.forEach(r=>v[r.k]=50);
 const ORD=['dopa','s1a','gaba','ne','mu','oxt','nmda','cb1','gr','ach','s2a','mt','ox','h1','d2','d1','kap','ado','crh','npy'];
 R.sort((a,b)=>{const i=ORD.indexOf(a.k),j=ORD.indexOf(b.k);return(i<0?99:i)-(j<0?99:j)});
-let on=new Set(ORD.slice(0,10));
+let RM=false,prevOn=null,on=new Set(ORD.slice(0,10));
+const EVA=new Set(['dopa','d1','d2','s1a','s2a','ht4','nic','m1','mglu','nmda','gaba','h3','cb1','mu']);
 const A=()=>R.filter(r=>on.has(r.k)),fix=()=>R.forEach(r=>{if(!on.has(r.k))v[r.k]=50});
 const vv=k=>50+MUL*(v[k]-50),d=k=>((EF[k]??50)-50)/50,col=x=>x>0?'var(--hi)':'var(--lo)';
-function eff(){EF={};R.forEach(r=>EF[r.k]=vv(r.k));IX.forEach(([a,b,g])=>{if(on.has(a)&&on.has(b))EF[b]=Math.max(0,Math.min(100,EF[b]+g*(EF[a]-50)))})}
+function eff(){EF={};R.forEach(r=>EF[r.k]=vv(r.k));IX.forEach(([a,b,g])=>{if(!RM&&on.has(a)&&on.has(b))EF[b]=Math.max(0,Math.min(100,EF[b]+g*(EF[a]-50)))})}
 function rv(id){const a=R.filter(r=>r.r.includes(id)&&on.has(r.k));return a.length?a.reduce((s,r)=>s+d(r.k),0)/a.length:0}
 const ORDE=['joie','tendresse','sérénité','surprise','peur','colère','tristesse','dégoût'];
 const W1={joie:['contentement','joie','euphorie'],peur:['inquiétude','peur','terreur'],colère:['irritation','colère','rage'],tristesse:['mélancolie','tristesse','chagrin profond'],dégoût:['gêne','dégoût','répulsion'],surprise:['étonnement','surprise','stupeur'],tendresse:['sympathie','tendresse','amour'],sérénité:['détente','sérénité','plénitude']};
@@ -161,49 +179,59 @@ A().forEach(r=>{const x=d(r.k);for(const e in r.w){s[e]+=r.w[e]*x;M[e]+=Math.abs
 const c=x=>Math.max(0,Math.min(1,x)),q={};for(const e in E)q[e]=c(s[e]/Math.max(.8,Math.min(M[e],1.6)));
 const pos=k=>on.has(k)?Math.max(0,d(k)):0,neg=k=>on.has(k)?Math.max(0,-d(k)):0,g=(a,b)=>Math.sqrt(a*b);
 q.eup=Math.max(q.eup,g(pos('dopa'),pos('mu'))*(1-.6*pos('kap')));q.att=Math.max(q.att,g(pos('oxt'),pos('dopa')));
-const B={joie:c(q.eup+.3*q.att+.15*q.mot-.5*q.dep-.4*q.anx),peur:c(.9*q.anx+.4*q.vig+.3*q.str-.5*q.cal-.3*q.eup),colère:c(.5*q.str+.5*pos('v1a')+.3*pos('ar')+.3*q.vig-.4*q.cal-.3*q.att),tristesse:c(.9*q.dep+.3*q.leth+.3*q.dys-.6*q.eup),dégoût:c(.7*q.dys+.5*pos('ht3')),surprise:c(.6*q.vig+.4*pos('ach')+.3*pos('a1')-.3*q.leth),tendresse:c(q.att+.2*q.cal),sérénité:c(q.cal-.5*q.anx-.3*q.str)};
-const l=Object.entries(B).filter(x=>x[1]>=.15).sort((a,b)=>b[1]-a[1]),tot=l.reduce((a,x)=>a+x[1],0);
-const mix=l.map(x=>[x[0],Math.round(x[1]/tot*100),x[1]]);
-const ps=B.joie+B.tendresse+B.sérénité,ng=B.peur+B.colère+B.tristesse+B.dégoût;
+const P=c(.8*q.eup+.6*q.att+.35*q.cal+.25*q.mot+.25*pos('dopa')),N=c(.8*q.anx+.6*q.str+.8*q.dep+.6*q.dys+.4*q.dou),Aa=c((q.vig+q.str+q.mot+.5*q.anx+.3*q.eup-q.leth-q.cal)/3+.5);
+const tn=c(1.2*q.att),ang=c(.25+.8*pos('v1a')+.6*pos('ar')+.3*q.str-.3*q.anx);
+const B={joie:P*(.35+.65*Aa)*(1-.5*tn),tendresse:P*tn*(1.1-.6*Aa),sérénité:P*(1-Aa)*(1-tn),peur:N*Aa*(1-ang),colère:N*Aa*ang,tristesse:N*(1-Aa)*(.5+.5*q.dep),dégoût:c(.7*q.dys+.6*pos('ht3'))*N,surprise:c(1.2*Math.max(0,Aa-.65)*(1-Math.abs(P-N))+.3*pos('a1'))};
+const l=Object.entries(B).filter(x=>x[1]>=.1).sort((a,b)=>b[1]-a[1]),tot=l.reduce((a,x)=>a+x[1],0);
+const mix=(P<.12&&N<.12&&Math.abs(Aa-.5)<.15)?[]:l.map(x=>[x[0],Math.round(x[1]/tot*100),x[1]]);
 const sy=[['Palpitations, cœur rapide',c(.6*pos('ne')+.5*pos('b')+.3*pos('crh'))],['Tension musculaire',c(.5*q.str+.5*neg('gaba'))],['Somnolence, fatigue',q.leth],['Douleur',q.dou],['Nausée, malaise',c(.6*q.dys+.6*pos('ht3'))],['Sueurs, frissons',c(.5*pos('ne')+.4*pos('gr'))]].filter(x=>x[1]>=.15);
-return{mix,int:Math.round(100*(l[0]?l[0][1]:0)),val:Math.max(-1,Math.min(1,(ps-ng)/1.5)),ar:Math.max(-1,Math.min(1,(q.vig+q.str+q.mot+.5*q.anx-q.leth-q.cal)/1.5)),sy}}
-function word(m){const[a,b]=m.mix,lv=x=>x>=.85?2:x>=.5?1:0;
-if(b&&b[2]/a[2]>=.5){const k=[a[0],b[0]].sort((x,y)=>ORDE.indexOf(x)-ORDE.indexOf(y)).join('+');if(W2[k])return W2[k]}
-return W1[a[0]][lv(a[2])]}
+return{mix,P,N,A:Aa,ang,int:Math.round(100*Math.max(P,N)),val:P-N,ar:2*Aa-1,sy}}
+const PR=[['euphorie',1,.05,.9],['joie',.8,.05,.65],['enthousiasme',.8,.1,.8],['contentement',.5,.05,.4],['sérénité',.5,0,.1],['tendresse, amour',.8,.1,.3],['émerveillement',.55,.2,.9],['surprise',.35,.3,.95],['excitation anxieuse (frisson, adrénaline)',.7,.6,.9],['douce amertume, nostalgie',.5,.5,.25],['mélancolie',.3,.5,.15],['tristesse',.05,.7,.15],['abattement',.05,.6,.05],['anxiété',.05,.6,.7],['peur',.05,.8,.85],['colère',.05,.8,.8],['frustration, amertume',.1,.7,.6],['dégoût',.05,.6,.5],['ambivalence agitée',.55,.55,.6]];
+function word(m){if(m.P>=.9&&m.N<.2&&m.mix[0]&&m.mix[0][0]=='joie')return'euphorie (joie totale)';let b=null,bs=1e9;PR.forEach(p=>{if(['colère','frustration, amertume'].includes(p[0])&&m.ang<.45)return;if(['peur','anxiété'].includes(p[0])&&m.ang>.55)return;const e=(m.P-p[1])**2+(m.N-p[2])**2+(m.A-p[3])**2;if(e<bs){bs=e;b=p}});return b[0]}
 const gauge=(a,b,p)=>`<div class="gx"><span>${a}</span><div class="g"><i style="left:${Math.round(p*100)}%"></i></div><span>${b}</span></div>`;
 function det(r){const x=v[r.k],t=Math.abs(x-50)<10?'niveau de repos, pas d’effet marqué':x>50?'plus actif : '+r.hi:'moins actif : '+r.lo;
 const ix=IX.filter(i=>i[0]==r.k||i[1]==r.k).map(i=>'• '+i[3]).join('<br>');
-return `<b>Où :</b> ${r.r.map(id=>G[id][0]).join(', ')}.<br><b>Rôle :</b> plus actif → ${r.hi} ; moins actif → ${r.lo}.<br><b>À ${x} % :</b> ${t}.`+(ix?`<br><b>Interactions :</b><br>${ix}`:'')+(r.k=='d2'?'<br><b>Repère publié :</b> sous antagoniste, 65 % d’occupation = réponse antipsychotique, environ 80 % = effets moteurs (Kapur 2000).':'')}
+return `<b>Où :</b> ${r.r.map(id=>G[id][0]).join(', ')}.<br><b>Preuves :</b> ${EVA.has(r.k)?'★ cartographié en PET chez l’humain (Hansen 2022).':'mécanisme décrit, mais absent des atlas PET humains de référence : valeurs plus approximatives.'}<br><b>Rôle :</b> plus actif → ${r.hi} ; moins actif → ${r.lo}.<br><b>À ${x} % :</b> ${t}.`+(ix?`<br><b>Interactions :</b><br>${ix}`:'')+(r.k=='d2'?'<br><b>Repère publié :</b> sous antagoniste, 65 % d’occupation = réponse antipsychotique, environ 80 % = effets moteurs (Kapur 2000).':'')}
 function render(){const m=calc();
 $('#bm').textContent=m.mix.length?m.mix.map(x=>x[1]+' % '+x[0]).join(' · '):'Aucun ressenti marqué';$('#bw').textContent=m.mix.length?'« '+word(m)+' »':'';
 $('#mix').innerHTML=(m.mix.map(x=>`<div class="row"><span>${x[0]}</span><b>${x[1]} %</b></div><div class="bar"><i style="width:${x[1]}%"></i></div>`).join('')||'<div class="mut">Choisis des sensations puis touche Analyser, ou règle les récepteurs.</div>')+(m.mix.length?`<div class="row"><span>Intensité globale</span><b>${m.int} %</b></div>`:'');
-$('#va').innerHTML=gauge('Désagréable','Agréable',(m.val+1)/2)+gauge('Calme','Excité',(m.ar+1)/2);
+$('#va').innerHTML=`<div class="row"><span>Affect positif</span><b>${Math.round(m.P*100)} %</b></div><div class="row"><span>Affect négatif</span><b>${Math.round(m.N*100)} %</b></div>`+(m.P>=.3&&m.N>=.3?'<div class="mut">Sentiment mixte : du positif et du négatif en même temps.</div>':'')+gauge('Calme','Excité',m.A);
 $('#sy').innerHTML=m.sy.map(x=>`<div class="row"><span>${x[0]}</span><b>${Math.round(x[1]*100)} %</b></div>`).join('')||'<div class="mut">Aucun symptôme marqué.</div>';
 A().forEach(r=>{const e=$('#v_'+r.k);if(!e)return;e.textContent=v[r.k]+' %'+(Math.abs(EF[r.k]-v[r.k])>=3?' → '+Math.round(EF[r.k])+' %':'');const dd=$('#d_'+r.k);if(!dd.classList.contains('hide'))dd.innerHTML=det(r)});
 if(T)drawMap()}
 function drawMap(){upd3();const rs=R.filter(r=>sel&&r.r.includes(sel)&&on.has(r.k));$('#regd').innerHTML=sel?`<b>${G[sel][0]}</b>`+(rs.map(r=>`<div class="row"><span>${r.n}</span><b>${Math.round(EF[r.k]??v[r.k])} %</b></div>`).join('')||'<div class="mut">Aucun récepteur actif ici.</div>'):'<span class="mut">Touche une région du cerveau.</span>'}
-function build(){$('#chips').innerHTML=R.map(r=>`<button class="chip${on.has(r.k)?' on':''}" data-c="${r.k}">${r.n}</button>`).join('');
+function build(){$('#chips').innerHTML=R.map(r=>`<button class="chip${on.has(r.k)?' on':''}" data-c="${r.k}">${EVA.has(r.k)?'★ ':''}${r.n}</button>`).join('');
 $('#list').innerHTML=A().map(r=>`<div class="rc" data-n="${r.n.toLowerCase()}"><div class="rh" data-a="${r.k}"><span><i class="ar" id="a_${r.k}">▸</i>${r.n}</span><b id="v_${r.k}"></b></div><input type="range" min="0" max="100" value="${v[r.k]}" data-k="${r.k}"><div class="det hide" id="d_${r.k}"></div></div>`).join('');render()}
 const S={'Cœur qui bat vite':{ne:35,b:30,crh:15},'Ventre noué':{ht3:30,crh:25,gr:15},'Énergie, envie d’agir':{dopa:30,ne:15,ox:20},'Calme profond':{gaba:30,s1a:20,ne:-25,a2:15},'Tension, mâchoire serrée':{ne:20,gr:20,gaba:-20,crh:15},'Chaleur, bien-être':{mu:30,dopa:15,oxt:15},'Fatigue, lourdeur':{ado:30,mt:20,h1:-25,ox:-25},'Légèreté, joie':{dopa:30,mu:20,s1a:15,gr:-15},'Vide, envie de pleurer':{dopa:-25,s1a:-20,kap:20,oxt:-10},'Besoin de lien':{oxt:35,dopa:10,mu:15},'Esprit embrouillé':{ach:-25,nmda:-20,ne:-10},'Concentration nette':{ach:25,a1:15,d1:15}};
 const LV=[0,.4,.7,1],si={};
 $('#sens').innerHTML=Object.keys(S).map(n=>`<button class="chip" data-s="${n}">${n}</button>`).join('');
 const clamp=x=>Math.max(0,Math.min(100,Math.round(x))),autoOn=()=>R.forEach(r=>{if(Math.abs(v[r.k]-50)>=8)on.add(r.k)});
-async function analyse(){const act=Object.entries(si).filter(x=>x[1]>0),txt=$('#txt').value.trim();
-if(!act.length&&!txt){$('#msg').textContent='Choisis au moins une sensation ou décris-la.';return}
-R.forEach(r=>v[r.k]=50);act.forEach(([n,l])=>{for(const k in S[n])v[k]+=S[n][k]*LV[l]});R.forEach(r=>v[r.k]=clamp(v[r.k]));autoOn();build();
-$('#msg').textContent=txt?'':'Récepteurs déduits de tes sensations (règle heuristique).';
-if(!txt)return;if(!sample){$('#msg').textContent='IA indisponible ici : seules les sensations ont été prises en compte.';return}
-$('#msg').textContent='Analyse en cours…';
-try{const o=await sample.json(`Une personne décrit ce qu'elle ressent : "${txt}". Sensations cochées : ${act.map(x=>x[0]+' ('+Math.round(LV[x[1]]*100)+' %)').join(', ')||'aucune'}.\nEstime l'activité de chaque récepteur cérébral de 0 à 100 (50 = repos), de façon plausible d'après la neurophysiologie.\nClés : ${R.map(r=>r.k+'='+r.n).join(', ')}.\nRéponds uniquement en JSON : {"values":{"dopa":50,...toutes les clés},"note":"une phrase en français"}`);
-R.forEach(r=>{const x=o.values&&+o.values[r.k];v[r.k]=isFinite(x)?clamp(x):50});autoOn();build();$('#msg').textContent=o.note||'Analyse terminée.'}catch(x){$('#msg').textContent='Échec de l’analyse ('+(x&&x.code||'erreur')+').'}}
-$('#go').onclick=analyse;
-$('#rz').onclick=()=>{for(const k in si)si[k]=0;$$c();R.forEach(r=>v[r.k]=50);$('#txt').value='';$('#msg').textContent='';build()};
+let hist=[],aiS=null,rid=0;
+const say=(w,t)=>{const m=document.createElement('div');m.className='m '+w;m.textContent=t;$('#chat').appendChild(m)};
+const chosen=()=>Object.entries(si).filter(x=>x[1]>0).map(x=>x[0]+' ('+Math.round(LV[x[1]]*100)+' %)').join(', ')||'aucune pour l’instant';
+function chipsS(l){$('#sens').innerHTML=l.map(n=>`<button class="chip" data-s="${n}">${n}</button>`).join('');$$c()}
+function localApply(){R.forEach(r=>v[r.k]=50);Object.entries(si).filter(x=>x[1]>0).forEach(([n,l])=>{const m=S[n]||{};for(const k in m)v[k]+=m[k]*LV[l]});R.forEach(r=>v[r.k]=clamp(v[r.k]));autoOn();build()}
+async function turn(force){
+if(!sample){chipsS(Object.keys(S));$('#qa').innerHTML='';$('#msg').textContent='IA indisponible ici : choisis des sensations puis touche Terminer.';return}
+$('#msg').textContent='…';$('#qa').innerHTML='';
+const n=hist.filter(h=>h.r=='u').length,fin=force||n>=4;
+try{const o=await sample.json(`Tu aides une personne à comprendre précisément ce qu'elle a ressenti, en posant des questions une par une.\nSituation : "${$('#txt').value}".\nSensations choisies : ${chosen()}.\nÉchanges : ${hist.map(h=>(h.r=='u'?'Elle : ':'Toi : ')+h.t).join(' | ')||'aucun'}.\n${fin?'Tu as assez d’informations : done=true et remplis values et note.':'Pose UNE seule question courte pour préciser l’intensité (corps, durée, moment) : done=false.'}\nRéponds uniquement en JSON : {"sensations":["8 sensations physiques ou mentales plausibles dans cette situation"],"question":"…","quick":["3 ou 4 réponses courtes d’intensité"],"done":false,"values":{"dopa":50,...toutes les clés, seulement si done},"note":"synthèse en 1 ou 2 phrases, seulement si done"}\nClés : ${A().map(r=>r.k+'='+r.n).join(', ')}.`);
+if(!aiS&&o.sensations){aiS=o.sensations;chipsS(aiS)}
+if(o.done||fin){if(o.values){R.forEach(r=>{const x=+o.values[r.k];v[r.k]=isFinite(x)?clamp(x):50});autoOn();build()}else localApply();say('a',o.note||'Voilà ce que je comprends : regarde ton ressenti plus bas.');$('#msg').textContent='';return}
+say('a',o.question);hist.push({r:'a',t:o.question});$('#qa').innerHTML=(o.quick||[]).map(q=>`<button class="chip" data-q="${q}">${q}</button>`).join('');$('#msg').textContent=''}
+catch(x){$('#msg').textContent='Échec de l’IA ('+(x&&x.code||'erreur')+').'}}
+function reply(t){t=t.trim();if(!t)return;hist.push({r:'u',t});say('u',t);$('#ans').value='';turn()}
+$('#go').onclick=()=>{if(!$('#txt').value.trim()){$('#msg').textContent='Raconte d’abord la situation.';return}hist=[];aiS=null;$('#chat').innerHTML='';$('#cc').classList.remove('hide');turn()};
+$('#send').onclick=()=>reply($('#ans').value);
+$('#fin').onclick=()=>{if(sample)turn(true);else{localApply();$('#msg').textContent='Récepteurs déduits de tes sensations (règle heuristique).'}};
+$('#rz').onclick=()=>{for(const k in si)si[k]=0;hist=[];aiS=null;$('#chat').innerHTML='';$('#qa').innerHTML='';$('#cc').classList.add('hide');R.forEach(r=>v[r.k]=50);$('#txt').value='';$('#msg').textContent='';chipsS(Object.keys(S));build()};
+document.addEventListener('click',e=>{const q=e.target.closest('[data-q]');if(q)reply(q.dataset.q)});
 function $$c(){document.querySelectorAll('[data-s]').forEach(b=>{const l=si[b.dataset.s]||0;b.classList.toggle('on',l>0);b.textContent=b.dataset.s+(l?' · '+Math.round(LV[l]*100)+' %':'')})}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-top]'),c=e.target.closest('[data-c]'),s=e.target.closest('[data-s]'),a=e.target.closest('[data-a]'),n=e.target.closest('[data-v]');
-if(n){['v1','v2','map'].forEach(i=>$('#'+i).classList.toggle('hide',i!=n.dataset.v));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b==n));if(n.dataset.v=='map'){init3();render()}return}
+if(n){['v1','v2','map','jr'].forEach(i=>$('#'+i).classList.toggle('hide',i!=n.dataset.v));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b==n));if(n.dataset.v=='map'){init3();render()}if(n.dataset.v=='jr')jr();return}
 if(s){si[s.dataset.s]=((si[s.dataset.s]||0)+1)%4;$$c();return}
 if(a){const k=a.dataset.a,dd=$('#d_'+k),o=dd.classList.toggle('hide');$('#a_'+k).textContent=o?'▸':'▾';if(!o)dd.innerHTML=det(R.find(r=>r.k==k));return}
-if(t)on=new Set(R.slice(0,+t.dataset.top).map(r=>r.k));else if(c){const k=c.dataset.c;on.has(k)?on.delete(k):on.add(k)}else return;fix();build()});
+if(t){RM=false;$('#rm').textContent='🔬 Mode réaliste : désactivé';on=new Set(R.slice(0,+t.dataset.top).map(r=>r.k))}else if(c){const k=c.dataset.c;if(RM&&!EVA.has(k)){RM=false;$('#rm').textContent='🔬 Mode réaliste : désactivé'}on.has(k)?on.delete(k):on.add(k)}else return;fix();build()});
 document.addEventListener('input',e=>{const k=e.target.dataset.k;if(k){v[k]=+e.target.value;render()}});
 $('#q').oninput=e=>document.querySelectorAll('.rc').forEach(x=>x.style.display=x.dataset.n.includes(e.target.value.toLowerCase())?'':'none');
 $('#nm').onclick=async()=>{const m=calc();if(!m.mix.length){$('#nmo').textContent='Rien à nommer pour l’instant.';return}if(!sample){$('#nmo').textContent='IA indisponible ici.';return}
@@ -213,6 +241,43 @@ $('#play').onclick=()=>{const b=$('#play');if(anim){cancelAnimationFrame(anim);a
 const t0=performance.now(),D=14000;b.textContent='■ Stop';
 (function f(t){const u=(t-t0)/D;if(u>=1){anim=null;MUL=1;b.textContent='▶ Simuler dans le temps';$('#ph').textContent='';render();return}
 MUL=u<.25?ss(u/.25):u<.5?1:Math.exp(-4.5*(u-.5)/.5);$('#ph').textContent=u<.25?' Montée':u<.5?' Pic':' Descente';render();anim=requestAnimationFrame(f)})(t0)};
+$('#rm').onclick=()=>{RM=!RM;if(RM){prevOn=on;on=new Set(R.filter(r=>EVA.has(r.k)).map(r=>r.k))}else on=prevOn||new Set(ORD.slice(0,10));$('#rm').textContent='🔬 Mode réaliste : '+(RM?'activé':'désactivé');build()};
+const ST={dopa:'D1-D5',d1:'D1',d2:'D2-D3',s1a:'5HT1A',s2a:'5HT2A',ht3:'5HT3',ht4:'5HT4',ht7:'5HT7',a1:'ADRA1',a2:'ADRA2',b:'ADRB',ne:'NE',gaba:'GABAA',gabb:'GABAB',nmda:'NMDA-AMPA',mglu:'MGLUR',ach:'ACH',m1:'M1',nic:'NACHR',mu:'MOR',del:'DOR',kap:'KOR',cb1:'CB1',oxt:'OXTR',v1a:'V1A',h1:'H1',h3:'H3',gr:'GR-MR',crh:'CRHR1',npy:'NPY-Y1',nk1:'NK1',ado:'ADORA',ox:'OXR',mt:'MT1-MT2',bdnf:'TRKB',ar:'AR',pr:'PR',er:'ER'};
+const nz=x=>x.toUpperCase().replace(/[μµ]/g,'U').replace(/[^A-Z0-9]/g,''),AL={};
+R.forEach(r=>{AL[nz(r.k)]=r.k;AL[nz(ST[r.k]||r.k)]=r.k});
+Object.assign(AL,{DIDS:'dopa',D1D5:'dopa',DA:'dopa',DOPAMINE:'dopa',U:'mu',MU:'mu',OPIOIDE:'mu',HT1A:'s1a','5HTIA':'s1a','5HTIIA':'s2a',CBI:'cb1',MR:'gr',GR:'gr',CORTISOL:'gr',NMDA:'nmda',MDAAMPA:'nmda',AMPA:'nmda',GLU:'nmda',GABA:'gaba',ACHE:'ach',D2:'d2',D3:'d2',NA:'ne',NORADRENALINE:'ne',SEROTONINE:'s1a'});
+function find(n){if(AL[n])return AL[n];for(let l=n.length-1;l>=3;l--)if(AL[n.slice(0,l)])return AL[n.slice(0,l)];if(n.startsWith('ET')&&n.length>3)return find(n.slice(2));return null}
+function parse(txt){const out=[],bad=[],re=/([^\s\/=→:|,;\[\]]+)\s*=\s*(\d{1,3})(?:\s*(?:→|->)\s*(\d{1,3}))?/g;let m;while((m=re.exec(txt))){const k=find(nz(m[1]));if(k)out.push([k,+m[2],m[3]!==undefined?+m[3]:null]);else bad.push(m[1])}return{out,bad}}
+const pad=n=>String(n).padStart(2,'0'),stamp=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function mk(t,w,ms,vals,prev){return `[${t}] ${w} (${ms}) :: `+Object.keys(vals).map(k=>{const a=prev?(prev[k]!==undefined?prev[k]:50):null,b=vals[k];return(ST[k]||k)+'='+(a!==null&&a!==b?a+'→'+b:b)}).join('/')}
+let J=[];function load(){try{J=JSON.parse(localStorage.getItem('jrn1')||'[]')}catch(e){J=[]}}
+function store(){try{localStorage.setItem('jrn1',JSON.stringify(J))}catch(e){$('#jmsg').textContent='Stockage impossible ici : exporte ton journal pour ne rien perdre.'}}
+function save(){const m=calc(),vals={};R.forEach(r=>{if(Math.abs(v[r.k]-50)>=3)vals[r.k]=v[r.k]});const prev=J.length?J[J.length-1].v:null,t=stamp(new Date()),w=m.mix.length?word(m):'état neutre',ms=m.mix.map(x=>x[1]+'% '+x[0]).join(', ')||'—';
+J.push({t,w,ms,s:($('#note').value||$('#txt').value).trim().slice(0,300),v:vals,c:mk(t,w,ms,vals,prev)});store();$('#note').value='';$('#jmsg').textContent='Enregistré à '+t.slice(11)+' : '+w;jr();const b=$('#sv');b.textContent='✓ Enregistré';setTimeout(()=>b.textContent='💾 Enregistrer',1500)}
+function jr(){$('#jl').innerHTML=J.slice().reverse().map((e,i)=>{const x=J.length-1-i;return `<div class="rc"><div class="rh"><span>${esc(e.t)}</span><b>${esc(e.w)}</b></div><div class="mut">${esc(e.ms)}</div>${e.s?`<div class="mut">« ${esc(e.s)} »</div>`:''}<div class="det">${esc(e.c)}</div><button class="chip" data-jr="r${x}">▶ Rejouer</button><button class="chip" data-jr="c${x}">⧉ Copier</button><button class="chip" data-jr="d${x}">✕</button></div>`}).join('')||'<div class="mut">Aucune entrée pour l’instant.</div>'}
+async function cp(t){try{await navigator.clipboard.writeText(t);$('#jmsg').textContent='Copié.'}catch(e){$('#exp').value=t;$('#exp').select();$('#jmsg').textContent='Copie bloquée ici : le code est dans la zone Exporter, copie-le à la main.'}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-jr]');if(!b)return;const a=b.dataset.jr[0],x=+b.dataset.jr.slice(1),en=J[x];if(!en)return;
+if(a=='r'){R.forEach(r=>v[r.k]=50);Object.entries(en.v).forEach(([k,y])=>v[k]=y);autoOn();build();document.querySelector('[data-v=v1]').click()}else if(a=='c')cp(en.c);else{J.splice(x,1);store();jr()}});
+function applyCode(txt){const lines=txt.split('\n').filter(l=>l.trim());let n=0,bad=[],last=null;
+lines.forEach(l=>{const p=parse(l);if(!p.out.length)return;bad.push(...p.bad);last=p;const dm=l.match(/\[(\d{4}-\d\d-\d\d[ T]\d\d:\d\d)\]/);
+if(dm&&!J.some(e=>e.c==l.trim())){const vals={};p.out.forEach(([k,a,b])=>vals[k]=clamp(b??a));J.push({t:dm[1].replace('T',' '),w:l.replace(/^.*?\]\s*/,'').split(/[(:]/)[0].trim()||'?',ms:(l.match(/\(([^)]*)\)/)||[])[1]||'',s:'',v:vals,c:l.trim()});n++}});
+if(!last)return 'Aucun récepteur reconnu dans ce code.';
+R.forEach(r=>v[r.k]=50);last.out.forEach(([k,a,b])=>v[k]=clamp(b??a));autoOn();J.sort((a,b)=>a.t<b.t?-1:1);store();build();jr();
+return `Appliqué au simulateur (${last.out.length} récepteurs)`+(n?`, ${n} entrée(s) ajoutée(s) au journal`:'')+(bad.length?'. Non reconnus : '+bad.join(', '):'')}
+$('#ap').onclick=()=>{$('#jmsg').textContent=applyCode($('#imp').value)};
+$('#sv').onclick=save;$('#sv2').onclick=save;
+$('#ex').onclick=()=>{const t=J.map(e=>e.c).join('\n');$('#exp').value=t;if(t)cp(t)};
+$('#jc').onclick=()=>{const b=$('#jc');if(b.dataset.a){J=[];store();jr();b.textContent='Tout effacer';delete b.dataset.a}else{b.dataset.a=1;b.textContent='Confirmer : tout effacer ?'}};
+load();jr();
+let rt=0;document.addEventListener('change',e=>{if(e.target.dataset.k){clearTimeout(rt);rt=setTimeout(readAI,500)}});
+async function readAI(){const m=calc();if(!m.mix.length){$('#lec').textContent='Aucun ressenti marqué à ce niveau.';return}if(!sample){$('#lec').textContent='IA indisponible ici.';return}
+const my=++rid,lv=A().filter(r=>Math.abs(v[r.k]-50)>=5).map(r=>r.n+' '+v[r.k]+' % (effectif '+Math.round(EF[r.k])+' %)').join(', ');$('#lec').textContent='Lecture IA…';
+try{const t=await sample(`Niveaux de récepteurs (50 % = repos) : ${lv}.\nMélange calculé : ${m.mix.map(x=>x[1]+' % '+x[0]).join(', ')} ; valence ${Math.round(m.val*100)} %, activation ${Math.round(m.ar*100)} %.\nDécris précisément ce que ressent la personne à CE palier exact : une petite variation (10 %, 30 %, 60 %, 90 %) change la nature de l'émotion. 4 phrases maximum : ressenti émotionnel, sensations corporelles, pensées typiques, ce qui changerait au palier du dessus ou du dessous. Reste cohérent avec la neurophysiologie, sans poser de diagnostic.`);if(my==rid)$('#lec').textContent=t.text}catch(x){if(my==rid)$('#lec').textContent='Échec de la lecture ('+(x&&x.code||'erreur')+').'}}
+function loadObj(txt){const V=[],F=[];txt.split('\n').forEach(l=>{const p=l.trim().split(/\s+/);if(p[0]=='v')V.push(+p[1],+p[2],+p[3]);else if(p[0]=='f'){const ix=p.slice(1).map(x=>parseInt(x)-1);for(let i=1;i<ix.length-1;i++)F.push(ix[0],ix[i],ix[i+1])}});
+const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(V,3));geo.setIndex(F);geo.computeBoundingBox();const bb=geo.boundingBox,c=new THREE.Vector3(),z=new THREE.Vector3();bb.getCenter(c);bb.getSize(z);const k=2.6/Math.max(z.x,z.y,z.z);geo.translate(-c.x,-c.y,-c.z);geo.scale(k,k,k);geo.computeVertexNormals();
+T.BG.clear();T.BG.add(new THREE.Mesh(geo,new THREE.MeshPhongMaterial({color:0xe3a6a1,transparent:true,opacity:.4,depthWrite:false,side:THREE.DoubleSide})))}
+$('#obj').onchange=e=>{const f=e.target.files[0];if(f)f.text().then(t=>{init3();if(T)loadObj(t)})};
 (async()=>{try{sample=await claude.use('sample')}catch(x){}})();
 build();
 </script></body></html>
